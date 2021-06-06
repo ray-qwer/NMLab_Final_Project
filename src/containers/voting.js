@@ -15,13 +15,16 @@ function Voting() {
     const {id} = useParams();
     const history = useHistory();
     // const [id,setId] = useState("");
-    useEffect(async()=>{
-        if(voteID === ""){
-            var ID = id;
-            setVoteID(ID);
-            // console.log(ID);
-            await getVoteInfo(ID);
+    useEffect(()=>{
+        async function fetchDate(){
+            if(voteID === ""){
+                var ID = id;
+                setVoteID(ID);
+                // console.log(ID);
+                await getVoteInfo(ID);
+            }
         }
+        
     },[id])
     
     // TODO: 

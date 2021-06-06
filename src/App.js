@@ -12,6 +12,7 @@ import Profile from './containers/Profile'
 import LogIn from "./containers/LogIn";
 import votingList from './containers/voting_list';
 import Voting from './containers/voting';
+import createVoting from './containers/CreateVote'; 
 import React,{useState, useEffect,createContext,useReducer} from 'react';
 import hello from 'hellojs';
 import {Googlelogout} from './utils/helloUtils'
@@ -20,7 +21,7 @@ import {UserContext,UserReducer} from './utils/ReducerContext'
 
 function App() {
     const UserId = "Customer";
-    const isManager = false;
+    const isManager = false;    // change it to true if you want to see Add Vote
     const isLogin = false;
     const userInitState = {
         id:UserId,
@@ -45,6 +46,11 @@ function App() {
                     <div class="list-group list-group-flush">
                         <Link class="list-group-item list-group-item-action list-group-item-light p-3" to={"/"}>Home</Link>
                         <Link class="list-group-item list-group-item-action list-group-item-light p-3" to="/VotingList">Voting!</Link>
+                        {isManager?(
+                            <Link class="list-group-item list-group-item-action list-group-item-light p-3" to="/CreateVoting">Add Vote</Link>
+                        ):(
+                            <></>
+                        )}
                         <Link class="list-group-item list-group-item-action list-group-item-light p-3" to={"/profile"}>Profile</Link>
                     </div>
                 </div>
@@ -72,11 +78,12 @@ function App() {
                             ID which will toggle the menu when clicked.
                         </p> */}
                         <Switch>
-                        <Route exact path={'/'} component={Home}/>
-                        <Route exact path={'/profile'} component={Profile}/>
-                        <Route exact path={'/Login'} component={LogIn}/>
-                        <Route exact path={'/VotingList'} component={votingList}/>
-                        <Route exact path={'/Voting/:id'} component={Voting}/>
+                            <Route exact path={'/'} component={Home}/>
+                            <Route exact path={'/profile'} component={Profile}/>
+                            <Route exact path={'/Login'} component={LogIn}/>
+                            <Route exact path={'/VotingList'} component={votingList}/>
+                            <Route exact path={'/Voting/:id'} component={Voting}/>
+                            <Route exact path={'/CreateVoting'} component={createVoting}/>
                         </Switch>
                     </div>
                 </div>

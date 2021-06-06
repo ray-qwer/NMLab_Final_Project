@@ -5,7 +5,6 @@ function Profile() {
     return (
         <div>
             <p> UserID: {uState.id}</p>
-            <button onClick={()=>{console.log(uState)}}>click</button>
         </div>
     );
 }
