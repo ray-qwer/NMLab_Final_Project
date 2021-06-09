@@ -13,6 +13,8 @@ import LogIn from "./containers/LogIn";
 import votingList from './containers/voting_list';
 import Voting from './containers/voting';
 import createVoting from './containers/CreateVote'; 
+import resultList from './containers/Resultlist';
+import VoteResult from "./containers/voteResult";
 import React,{useState, useEffect,createContext,useReducer} from 'react';
 import {Googlelogout} from './utils/helloUtils'
 import {UserContext,UserReducer} from './utils/ReducerContext'
@@ -35,7 +37,7 @@ function App() {
     const [accounts,setAccounts] = useState([]);
     const [web3,setWeb] = useState(null);
     const [contract, setContract] = useState(null);
-    
+
     useEffect(()=>{
         const a = async() =>{
         try {
@@ -79,7 +81,8 @@ function App() {
                     <div class="sidebar-heading border-bottom bg-light">Block Voting</div>
                     <div class="list-group list-group-flush">
                         <Link class="list-group-item list-group-item-action list-group-item-light p-3" to={"/"}>Home</Link>
-                        <Link class="list-group-item list-group-item-action list-group-item-light p-3" to="/VotingList">Voting!</Link>
+                        <Link class="list-group-item list-group-item-action list-group-item-light p-3" to={"/VotingList"}>Voting!</Link>
+                        <Link class="list-group-item list-group-item-action list-group-item-light p-3" to={"/Result"}>See Results</Link>
                         {isManager?(
                             <Link class="list-group-item list-group-item-action list-group-item-light p-3" to="/CreateVoting">Add Vote</Link>
                         ):(
@@ -118,6 +121,8 @@ function App() {
                             <Route exact path={'/VotingList'} component={votingList}/>
                             <Route exact path={'/Voting/:id'} component={Voting}/>
                             <Route exact path={'/CreateVoting'} component={createVoting}/>
+                            <Route exact path={'/Result'} component={resultList}/>
+                            <Route exact path={'/Result/:id'} component={VoteResult}/>
                         </Switch>
                     </div>
                 </div>

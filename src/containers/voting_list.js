@@ -59,7 +59,7 @@ function VotingList(){
 
     const renderVoting_list = Voting_list.map((voteItem,i)=>
         
-            <div className="VotingListItem" onClick={()=>goVoting(voteItem)} to={'/Voting/{voteItem.voteID}'} key={i}>
+            <div className="VotingListItem" onClick={()=>goVoting(voteItem)} key={i}>
                 <div className="VotingListItemTitle">{voteItem.title}</div>
                 <div className="VotingListItemCountdown">{getTimeStr(voteItem.deadLine)}</div>
             </div>
