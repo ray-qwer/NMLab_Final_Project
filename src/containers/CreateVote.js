@@ -7,7 +7,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import Button from '@material-ui/core/Button'
 
 function CreateVoting(){
-    const {uState} = useContext(UserContext);
+    const {uState,accounts,web3,contract} = useContext(UserContext);
     const [topic,setTopic] = useState("");
     const [content,setContent] = useState("");
     const [candidates,setCandidates] = useState(["dd","ee"]);
@@ -23,7 +23,7 @@ function CreateVoting(){
         
         console.log(dueTime)
     }
-    // TODO:
+    // TODO: 
     const buildVote = () =>{
         if(topic === "" || content === "" || dueTime === "" ||candidates.some((e)=>e==="")){
             alert("something is empty!!!")
@@ -45,7 +45,8 @@ function CreateVoting(){
             candidates: candidates
         }
         console.log(vote);
-        // contract
+        // TODO:
+        // throw "vote" to contract
     }
     return (
         <div>

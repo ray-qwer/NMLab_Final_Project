@@ -24,5 +24,8 @@ export const UserReducer = (state,action)=>{
 export const UserContext =createContext({
     id:"Customer",
     isManager:false,
-    isLogin: false
+    isLogin: false,
+    web3: null,
+    contract: null,
+    accounts: []
 }); 

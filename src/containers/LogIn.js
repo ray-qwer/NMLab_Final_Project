@@ -7,7 +7,7 @@ import hello from 'hellojs'
 import {UserContext} from '../utils/ReducerContext'
 
 function LogIn() {
-    const {uDispatch} = useContext(UserContext);
+    const {uDispatch,accounts,web3,contract} = useContext(UserContext);
     const getLoginInfo = () =>{
         uDispatch({type:'LOGIN',payload:{UserId:"ray",isManager:true,isLogin:true}})
     }
@@ -20,6 +20,10 @@ function LogIn() {
         })
             
         history.push('/',{login:true});
+    }
+    // TODO:
+    const LoginBlockChain = () =>{
+        // if need log in, can use at here, and change onClick function
     }
     return (
             <div className="LoginLobby">

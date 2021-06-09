@@ -1,7 +1,9 @@
-import react ,{useState,Component,useEffect} from 'react'
+import react ,{useState,Component,useEffect,useContext} from 'react'
 import  "../App.css"
 import {useHistory} from 'react-router-dom' 
 import {getTime} from '../utils/utils'
+import {UserContext} from '../utils/ReducerContext'
+
 /*
     voting structure:
         deadline,
@@ -10,7 +12,7 @@ import {getTime} from '../utils/utils'
         goVoting
 */
 function VotingList(){
-    // testing
+    // for Testing, can delete them, be careful that at useState also need to reclaim them 
     const myFirstVote = {
         deadLine: "2021/6/8 21:00:00",
         title: "1st Vote",
@@ -22,7 +24,8 @@ function VotingList(){
         voteID: 2
     };
     // end testing
-
+    const {uState,uDispatch,accounts,web3,contract} = useContext(UserContext);
+    
     const [Voting_list,setVoting_list] = useState([myFirstVote,mySecVote]);
     const [time,setTime] = useState(Date.now());
     const history = useHistory();
@@ -37,7 +40,7 @@ function VotingList(){
         // get voting infomation
 
     }
-    
+    // TODO: identity checking: if he/she has the right to vote or time out
     const goVoting = (voteItem) => {
         // console.log(voteID);
         // to the page to vote
@@ -48,7 +51,8 @@ function VotingList(){
             // check is voted?
         }
         else{
-            alert("timeout")
+            alert("timeout") 
+            // well i haven't done the checking page... sorry, ASAP
         }
     }
     // 

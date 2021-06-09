@@ -3,8 +3,11 @@ import {useHistory,useParams,Prompt,useLocation} from 'react-router-dom'
 import Button from '@material-ui/core/Button'
 import Send from "@material-ui/icons/Send"
 import HomeTwoToneIcon from '@material-ui/icons/HomeTwoTone';
+import {UserContext} from '../utils/ReducerContext'
+import {useContext} from 'react-router-dom';
 
 function Voting() {
+    const {uState,accounts,web3,contract} = useContext(UserContext);    
     const [voteID,setVoteID] = useState("");
     const [topic,setTopic] = useState("");
     const [content, setContent] = useState("");
@@ -27,7 +30,7 @@ function Voting() {
         
     },[id])
     
-    // TODO: 
+    // TODO: to get information about the vote by id
     const getVoteInfo = async (voteID) =>{
         var candidates = ["Elmo","Cookie Monster","Bert"];
         for(var i = 0;i<candidates.length;i=i+1){
@@ -40,21 +43,7 @@ function Voting() {
         setCandidate(candidates);
         setContent("sesame street")
     }
-    // TODO: 
-    const updateView = candidate.map((chosen,i)=>
-        <label>
-            <input type="checkbox" key={i} onChange={()=>{clickCheckBox(i)}} defaultChecked={chosen.select} /><span>{chosen.option}</span>
-        </label>
-    );
-
-
-    const clickCheckBox = (key) => {
-        // console.log(candidate[key].select)
-        var k = candidate;
-        k[key].select = !k[key].select;
-        setCandidate(k);
-        setIsChose(true);
-    }
+    // TODO: submit the answer 
     const submitAnswer= async()=>{
         let ans = [];
         let ansId =[];
@@ -69,8 +58,24 @@ function Voting() {
             setIsVote(true);
             setIsChose(false);
         }
-
+        // i haven't added the limit of ballots, so here can vote as much as you like
+        // contract
     }
+    const updateView = candidate.map((chosen,i)=>
+        <label>
+            <input type="checkbox" key={i} onChange={()=>{clickCheckBox(i)}} defaultChecked={chosen.select} /><span>{chosen.option}</span>
+        </label>
+    );
+
+
+    const clickCheckBox = (key) => {
+        // console.log(candidate[key].select)
+        var k = candidate;
+        k[key].select = !k[key].select;
+        setCandidate(k);
+        setIsChose(true);
+    }
+    
     const backHome=()=>{
         history.push("/")
     }

@@ -14,9 +14,12 @@ import votingList from './containers/voting_list';
 import Voting from './containers/voting';
 import createVoting from './containers/CreateVote'; 
 import React,{useState, useEffect,createContext,useReducer} from 'react';
-import hello from 'hellojs';
 import {Googlelogout} from './utils/helloUtils'
 import {UserContext,UserReducer} from './utils/ReducerContext'
+import getWeb3 from './utils/getWeb3'
+// TODO: replace to our contract
+// import TodoAppContract from "./build/contracts/TodoApp.json" 
+
 
 
 function App() {
@@ -29,6 +32,37 @@ function App() {
         isLogin: isLogin
     }
     const [uState,uDispatch] = useReducer(UserReducer,userInitState);
+    const [accounts,setAccounts] = useState([]);
+    const [web3,setWeb] = useState(null);
+    const [contract, setContract] = useState(null);
+    
+    useEffect(()=>{
+        const a = async() =>{
+        try {
+            const web = await getWeb3();
+            const web_accounts = await web3.eth.getAccounts();
+            var  networkId = await web3.eth.net.getId();
+            // TODO: replace with our contract
+            // const deployedNetwork = TodoAppContract.networks[networkId];
+            // const instance = new web3.eth.Contract(
+            //   TodoAppContract.abi,
+            //   deployedNetwork && deployedNetwork.address,
+            // );
+            console.log(deployedNetwork);
+            console.log(deployedNetwork.address);
+
+            setAccounts(web_accounts);
+            setWeb(web);
+            setContract(instance);
+            // this.setState({ web3, accounts, contract: instance });
+        } catch (error) {
+            alert(
+              `Failed to load web3, accounts, or contract. Check console for details.`,
+            );
+            console.error(error);
+          }
+        }
+    },[])
     const clickSignOut = () =>{
         if(Googlelogout()){
             uDispatch({type:'LOGOUT',payload:{UserId:"Customer",isManager:false,isLogin:false}})
@@ -36,7 +70,7 @@ function App() {
             // setIsLogin(false)
     }
     return (
-        <UserContext.Provider value={{uState,uDispatch}}>
+        <UserContext.Provider value={{uState,uDispatch,accounts,contract,web3}}>
         <Router>
         <div className="App">
         <div class="d-flex" id="wrapper" >
