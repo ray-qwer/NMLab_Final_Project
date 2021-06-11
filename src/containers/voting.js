@@ -32,16 +32,21 @@ function Voting() {
     
     // TODO: to get information about the vote by id
     const getVoteInfo = async (voteID) =>{
-        var candidates = ["Elmo","Cookie Monster","Bert"];
+        var [_topic, _content,_duetime,_candidates] = await contract.methods.getVote(voteID);
+        setTopic(_topic);
+        setContent(_content);
         for(var i = 0;i<candidates.length;i=i+1){
             candidates[i] = {
                 option: candidates[i],
                 select: false
             }
         }
-        setTopic("Choose a Monster");
-        setCandidate(candidates);
-        setContent("sesame street")
+        setCandidate(_candidates);
+        
+        // var candidates = ["Elmo","Cookie Monster","Bert"];
+        // setTopic("Choose a Monster");
+        // setCandidate(candidates);
+        // setContent("sesame street")
     }
     // TODO: submit the answer 
     const submitAnswer= async()=>{

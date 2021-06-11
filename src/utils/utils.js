@@ -1,3 +1,4 @@
+import web3 from 'web3';
 function getTime (deadLine) {
     var DL = new Date(deadLine);
     var time = new Date();
@@ -19,6 +20,16 @@ function getTime (deadLine) {
         countDown = false;
     }
     return countDown;
+}
+
+function hexTostring(toConvert){
+    var _str;
+    try{
+        web3.utils.utf8ToHex();
+    }catch(e){
+
+    }
+    return _str;
 }
 
 export {getTime};
