@@ -5,6 +5,7 @@ import TextField from '@material-ui/core/TextField'
 import  "../App.css"
 import DeleteIcon from '@material-ui/icons/Delete';
 import Button from '@material-ui/core/Button'
+import {stringToHex} from '../utils/utils'
 
 function CreateVoting(){
     const {uState,accounts,web3,contract} = useContext(UserContext);
@@ -38,11 +39,22 @@ function CreateVoting(){
             return
         }
         console.log(time)
+        // new!! convert to int 
+        var _topic,_content,_time;
+        _topic = stringToHex(topic);
+        _content = stringToHex(_content);
+        _time = stringToHex(_time);
+        var stringCandidates = [];
+        for(var i = 0;i<candidates.length;i+=1){
+            var _num = stringToHex(candidates[i]);
+            strigCandidates = [...stringCandidates,_num];
+        }
+        // 
         const vote = {
-            topic: topic,
-            content: content,
-            DueTime: time,
-            candidates: candidates
+            topic: _topic,
+            content: _content,
+            DueTime: _time,
+            candidates: stringCandidates
         }
         console.log(vote);
         // TODO:

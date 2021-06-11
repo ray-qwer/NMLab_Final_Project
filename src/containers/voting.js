@@ -5,6 +5,7 @@ import Send from "@material-ui/icons/Send"
 import HomeTwoToneIcon from '@material-ui/icons/HomeTwoTone';
 import {UserContext} from '../utils/ReducerContext'
 import {useContext} from 'react-router-dom';
+import {hexTostring} from '../utils/utils'
 
 function Voting() {
     const {uState,accounts,web3,contract} = useContext(UserContext);    
@@ -32,7 +33,16 @@ function Voting() {
     
     // TODO: to get information about the vote by id
     const getVoteInfo = async (voteID) =>{
-        var [_topic, _content,_duetime,_candidates] = await contract.methods.getVote(voteID);
+        var [_topic, _content,_duetime,_IntCandidates] = await contract.methods.getVote(voteID);
+        // new !! convert hex to string
+        _topic = hexTostring(_topic);
+        _content = hexTostring(_content);
+        _candidates = [];
+        for (var i = 0; i<_IntCandidates.length;i+=1){
+            var _can = hexTostring(_IntCandidates[i]);
+            _candidates=[..._candidates,_can];
+        }
+        // 
         setTopic(_topic);
         setContent(_content);
         for(var i = 0;i<candidates.length;i=i+1){

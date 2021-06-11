@@ -1,7 +1,7 @@
 import react ,{useState,Component,useEffect,useContext} from 'react'
 import  "../App.css"
 import {useHistory} from 'react-router-dom' 
-import {getTime} from '../utils/utils'
+import {getTime,hexTostring} from '../utils/utils'
 import {UserContext} from '../utils/ReducerContext'
 
 /*
@@ -46,6 +46,10 @@ function VotingList(){
         var _list = [];
         for(var i = 0;i<_votingList.length;i+=1){
             var [_topic,_,_duetime,_,_] = await contract.methods.getVoteinfo(_votingList[i]); // contract: get the info of one voteID
+            // new !! convert hex to string
+            _topic = hexTostring(_topic);
+            _duetiem = hexTostring(_topic);
+            // 
             var vote = {
                 title: _topic,
                 deadLine:_duetime,

@@ -25,11 +25,22 @@ function getTime (deadLine) {
 function hexTostring(toConvert){
     var _str;
     try{
-        web3.utils.utf8ToHex();
+        _str = web3.utils.hexToUtf8(toConvert);
     }catch(e){
-
+        _str = web3.utils.hexToAscii(toConvert);
     }
     return _str;
 }
-
-export {getTime};
+function stringToHex(toConvert){
+    var _num;
+    var _str;
+    try{
+        _str = web3.utils.utf8ToHex(toConvert);
+        _num = parseInt(_str);
+    }catch(e){
+        _str = web3.utils.asciiToHex(toConvert);
+        _num = parseInt(_str);
+    }
+    return _num;
+}
+export {getTime,stringToHex,hexTostring};
