@@ -38,6 +38,7 @@ function VotingList(){
         const getList = async() =>{
             await getVoting_list();
         }
+        getList();
     },[])
     // TODO:
     const getVoting_list=async() =>{
@@ -48,7 +49,7 @@ function VotingList(){
             var [_topic,_,_duetime,_,_] = await contract.methods.getVoteinfo(_votingList[i]); // contract: get the info of one voteID
             // new !! convert hex to string
             _topic = hexTostring(_topic);
-            _duetiem = hexTostring(_topic);
+            _duetime = hexTostring(_topic);
             // 
             var vote = {
                 title: _topic,

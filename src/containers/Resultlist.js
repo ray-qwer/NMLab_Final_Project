@@ -42,7 +42,7 @@ function ResultList(){
             </div>
         
     );
-    eturn (
+    return (
         <div className="ResultList">
             {renderResult_list}
         </div>

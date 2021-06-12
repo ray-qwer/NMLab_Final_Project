@@ -47,7 +47,7 @@ function CreateVoting(){
         var stringCandidates = [];
         for(var i = 0;i<candidates.length;i+=1){
             var _num = stringToHex(candidates[i]);
-            strigCandidates = [...stringCandidates,_num];
+            stringCandidates = [...stringCandidates,_num];
         }
         // 
         const vote = {

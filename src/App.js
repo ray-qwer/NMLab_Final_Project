@@ -21,6 +21,7 @@ import {UserContext,UserReducer} from './utils/ReducerContext'
 import getWeb3 from './utils/getWeb3'
 // TODO: replace to our contract
 // import TodoAppContract from "./build/contracts/TodoApp.json" 
+import VotingContract from "./build/contracts/Voting.json"
 
 
 
@@ -39,7 +40,9 @@ function App() {
     const [contract, setContract] = useState(null);
 
     useEffect(()=>{
+        console.log("hi")
         const a = async() =>{
+            console.log("try")
         try {
             const web = await getWeb3();
             const web_accounts = await web3.eth.getAccounts();
@@ -50,9 +53,16 @@ function App() {
             //   TodoAppContract.abi,
             //   deployedNetwork && deployedNetwork.address,
             // );
+            const deployedNetwork = VotingContract.networks[networkId];
+            const instance = new web3.eth.Contract(
+                VotingContract.abi,
+                deployedNetwork && deployedNetwork.address,
+            );
+
             console.log(deployedNetwork);
             console.log(deployedNetwork.address);
-
+            console.log(instance);
+            console.log("hi")
             setAccounts(web_accounts);
             setWeb(web);
             setContract(instance);
@@ -64,6 +74,7 @@ function App() {
             console.error(error);
           }
         }
+        a();
     },[])
     const clickSignOut = () =>{
         if(Googlelogout()){

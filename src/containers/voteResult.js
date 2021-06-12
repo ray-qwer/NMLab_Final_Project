@@ -1,10 +1,9 @@
-import React,{useState,useEffect} from 'react'
+import React,{useState,useEffect,useContext} from 'react'
 import {useHistory,useParams,Prompt,useLocation} from 'react-router-dom'
 import Button from '@material-ui/core/Button'
 import Send from "@material-ui/icons/Send"
 import HomeTwoToneIcon from '@material-ui/icons/HomeTwoTone';
 import {UserContext} from '../utils/ReducerContext'
-import {useContext} from 'react-router-dom';
 
 function VoteResult() {
     const {uState,accounts,web3,contract} = useContext(UserContext);    
@@ -12,10 +11,11 @@ function VoteResult() {
     const [content, setContent] = useState("");
     const [candidate,setCandidate] = useState([]);
     const [numofVote, setNumofVote] = useState([]);
+    const [topic,setTopic] = useState("");
     const {id} = useParams();
     const history = useHistory();
     useEffect(()=>{
-        async function fetchDate(){
+        const fetchDate = async()=>{
             if(voteID === ""){
                 var ID = id;
                 setVoteID(ID);
@@ -23,6 +23,7 @@ function VoteResult() {
                 await getResultInfo(ID);
             }
         }
+        fetchDate();
     },[id])
     // TODO: to get information about the vote by id
     const getResultInfo = async (voteID) =>{

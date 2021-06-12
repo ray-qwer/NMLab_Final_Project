@@ -1,10 +1,9 @@
-import React,{useState,useEffect} from 'react'
+import React,{useState,useEffect,useContext} from 'react'
 import {useHistory,useParams,Prompt,useLocation} from 'react-router-dom'
 import Button from '@material-ui/core/Button'
 import Send from "@material-ui/icons/Send"
 import HomeTwoToneIcon from '@material-ui/icons/HomeTwoTone';
 import {UserContext} from '../utils/ReducerContext'
-import {useContext} from 'react-router-dom';
 import {hexTostring} from '../utils/utils'
 
 function Voting() {
@@ -20,7 +19,7 @@ function Voting() {
     const history = useHistory();
     // const [id,setId] = useState("");
     useEffect(()=>{
-        async function fetchDate(){
+        const fetchDate=async()=>{
             if(voteID === ""){
                 var ID = id;
                 setVoteID(ID);
@@ -28,7 +27,7 @@ function Voting() {
                 await getVoteInfo(ID);
             }
         }
-        
+        fetchDate();
     },[id])
     
     // TODO: to get information about the vote by id
@@ -37,7 +36,7 @@ function Voting() {
         // new !! convert hex to string
         _topic = hexTostring(_topic);
         _content = hexTostring(_content);
-        _candidates = [];
+        var _candidates = [];
         for (var i = 0; i<_IntCandidates.length;i+=1){
             var _can = hexTostring(_IntCandidates[i]);
             _candidates=[..._candidates,_can];
@@ -45,9 +44,9 @@ function Voting() {
         // 
         setTopic(_topic);
         setContent(_content);
-        for(var i = 0;i<candidates.length;i=i+1){
-            candidates[i] = {
-                option: candidates[i],
+        for(var i = 0;i<_candidates.length;i=i+1){
+            _candidates[i] = {
+                option: _candidates[i],
                 select: false
             }
         }
