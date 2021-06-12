@@ -34,8 +34,6 @@ function Voting() {
     const getVoteInfo = async (voteID) =>{
         var [_topic, _content,_duetime,_IntCandidates] = await contract.methods.getVote(voteID);
         // new !! convert hex to string
-        _topic = hexTostring(_topic);
-        _content = hexTostring(_content);
         var _candidates = [];
         for (var i = 0; i<_IntCandidates.length;i+=1){
             var _can = hexTostring(_IntCandidates[i]);

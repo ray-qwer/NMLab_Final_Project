@@ -27,7 +27,7 @@ import VotingContract from "./build/contracts/Voting.json"
 
 function App() {
     const UserId = "Customer";
-    const isManager = false;    // change it to true if you want to see Add Vote
+    const isManager = true;    // change it to true if you want to see Add Vote
     const isLogin = false;
     const userInitState = {
         id:UserId,
@@ -45,8 +45,8 @@ function App() {
             console.log("try")
         try {
             const web = await getWeb3();
-            const web_accounts = await web3.eth.getAccounts();
-            var  networkId = await web3.eth.net.getId();
+            const web_accounts = await web.eth.getAccounts();
+            var  networkId = await web.eth.net.getId();
             // TODO: replace with our contract
             // const deployedNetwork = TodoAppContract.networks[networkId];
             // const instance = new web3.eth.Contract(
@@ -54,7 +54,7 @@ function App() {
             //   deployedNetwork && deployedNetwork.address,
             // );
             const deployedNetwork = VotingContract.networks[networkId];
-            const instance = new web3.eth.Contract(
+            const instance = new web.eth.Contract(
                 VotingContract.abi,
                 deployedNetwork && deployedNetwork.address,
             );
@@ -95,7 +95,7 @@ function App() {
                         <Link class="list-group-item list-group-item-action list-group-item-light p-3" to={"/VotingList"}>Voting!</Link>
                         <Link class="list-group-item list-group-item-action list-group-item-light p-3" to={"/Result"}>See Results</Link>
                         {isManager?(
-                            <Link class="list-group-item list-group-item-action list-group-item-light p-3" to="/CreateVoting">Add Vote</Link>
+                            <Link class="list-group-item list-group-item-action list-group-item-light p-3" to={"/CreateVoting"}>Add Vote</Link>
                         ):(
                             <></>
                         )}

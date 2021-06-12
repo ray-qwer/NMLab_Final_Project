@@ -32,15 +32,12 @@ function hexTostring(toConvert){
     return _str;
 }
 function stringToHex(toConvert){
-    var _num;
     var _str;
     try{
         _str = web3.utils.utf8ToHex(toConvert);
-        _num = parseInt(_str);
     }catch(e){
         _str = web3.utils.asciiToHex(toConvert);
-        _num = parseInt(_str);
     }
-    return _num;
+    return _str;
 }
 export {getTime,stringToHex,hexTostring};

@@ -25,7 +25,7 @@ function CreateVoting(){
         console.log(dueTime)
     }
     // TODO: 
-    const buildVote = () =>{
+    const buildVote = async () =>{
         if(topic === "" || content === "" || dueTime === "" ||candidates.some((e)=>e==="")){
             alert("something is empty!!!")
             return
@@ -40,10 +40,10 @@ function CreateVoting(){
         }
         console.log(time)
         // new!! convert to int 
-        var _topic,_content,_time;
-        _topic = stringToHex(topic);
-        _content = stringToHex(_content);
-        _time = stringToHex(_time);
+        // var _topic,_content,_time;
+        // _topic = stringToHex(topic);
+        // _content = stringToHex(content);
+        // _time = stringToHex(time);
         var stringCandidates = [];
         for(var i = 0;i<candidates.length;i+=1){
             var _num = stringToHex(candidates[i]);
@@ -51,14 +51,15 @@ function CreateVoting(){
         }
         // 
         const vote = {
-            topic: _topic,
-            content: _content,
-            DueTime: _time,
+            topic: topic,
+            content: content,
+            DueTime: time,
             candidates: stringCandidates
         }
         console.log(vote);
         // TODO:
         // throw "vote" to contract
+        await contract.methods.addVote(vote.topic,vote.content,vote.DueTime,vote.candidates,1).send({from:accounts[0]});
     }
     return (
         <div>
