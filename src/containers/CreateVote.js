@@ -39,7 +39,7 @@ function CreateVoting(){
     }
     const addVoter = () => {
         if (voter.indexOf(" ")>=0){
-            alert("illegal ID");
+            alert("illegal ID: no space in ID");
             return;
         }
         if(whoCanVote.findIndex((e)=>e==voter)<0){
@@ -78,6 +78,11 @@ function CreateVoting(){
             stringCandidates = [...stringCandidates,_num];
         }
         // 
+        var stringCanVote =[];
+        for(var i = 0;i<whoCanVote.length;i+=1){
+            var _num = stringToHex(whoCanVote[i]);
+            stringCanVote = [...stringCanVote,_num];
+        }
         const vote = {
             topic: topic,
             content: content,
@@ -86,7 +91,7 @@ function CreateVoting(){
             ballot: ballot
         }
         console.log(vote);
-        console.log(whoCanVote);
+        console.log(stringCanVote);
         // TODO:
         // throw "vote" to contract
         // await contract.methods.addVote(vote.topic,vote.content,vote.DueTime,vote.candidates,1).send({from:accounts[0],gas: 1500000,gasPrice: '30000000000000'});
