@@ -59,10 +59,8 @@ function App() {
                 deployedNetwork && deployedNetwork.address,
             );
 
-            console.log(deployedNetwork);
-            console.log(deployedNetwork.address);
-            console.log(instance);
-            console.log("hi")
+
+            console.log(web_accounts);
             setAccounts(web_accounts);
             setWeb(web);
             setContract(instance);
