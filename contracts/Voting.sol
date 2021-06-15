@@ -19,8 +19,8 @@ contract Voting{
 
     //structs
     struct Voter{
-        uint vid;
-        address vaddr;
+        bytes32 vid;
+        //address vaddr;
         uint[] allowed_votes;
     }
 
@@ -38,11 +38,11 @@ contract Voting{
         uint num_candidates;
         uint num_voters;
         uint upperLimit;
-        uint[] allowed_voters;
+        bytes32[] allowed_voters;
         bytes32[] participating_candidates;
         mapping (uint => Candidate) candidates;
         mapping (bytes32 => uint) cname_to_id;
-        mapping (uint => Voter) voters;
+        mapping (bytes32 => Voter) voters;
         mapping (uint => uint) ballot;
     }
 
@@ -50,6 +50,7 @@ contract Voting{
     //Vote[] votes;
     mapping (uint => Vote) votes;
     uint num_votes;
+    
 
     //type transfer functions
     function stringToBytes32(string memory source) public pure returns (bytes32 result) {
@@ -75,8 +76,8 @@ contract Voting{
     }
 
     //add functions
-    function addCandidate(uint vote_id, string memory name) onlyOwner public returns(uint) {
-        bytes32 nb = stringToBytes32(name);
+    function addCandidate(uint vote_id, bytes32 name) onlyOwner public returns(uint) {
+        bytes32 nb = name;
         Vote storage cur_vote = votes[vote_id];
         // candidateID is the return variable
         uint candidateID = cur_vote.num_candidates++;
@@ -88,24 +89,41 @@ contract Voting{
         return (candidateID);
     }
 
-    function addVote(string memory topic, string memory content,string memory dueTime,bytes32[] memory ini_cand, uint upperLimit) onlyOwner public returns(uint){
+    function addVote(string memory topic, string memory content,string memory dueTime,bytes32[] memory ini_vot,bytes32[] memory ini_cand, uint upperLimit) onlyOwner public returns(uint){
         uint voteID = num_votes++;
-        uint[] memory vot;
+        //uint[] memory vot;
+        bytes32[] memory vot = ini_vot;    
         bytes32[] memory cand = ini_cand;
+        /*uint l = ini_cand.length;
+        for (uint i = 0; i < l; i++) {
+            cand[i] = ini_cand[i];
+        }*/
+        
         votes[voteID] = Vote(voteID,topic,content,dueTime,0,0,upperLimit,vot,cand);
         uint len = cand.length;
         for (uint i = 0; i < len; i++) {
-            string memory _cname = bytes32ToString(cand[i]);
-            addCandidate(voteID,_cname);
+            //string memory _cname = bytes32ToString(cand[i]);
+            //addCandidate(voteID,_cname);
+            addCandidate(voteID,cand[i]);
+        }
+        uint len2 = vot.length;
+        for (uint i = 0; i < len2; i++) {
+            //string memory _cname = bytes32ToString(cand[i]);
+            //addCandidate(voteID,_cname);
+            addVoter(voteID,vot[i]);
         }
         emit AddedVote(voteID);
         return (voteID); 
     }
 
-    function addVoter(uint _vote_id, uint _vid) onlyOwner public returns(uint){
+    function addVoter(uint _vote_id, bytes32 _vid) onlyOwner public returns(uint){
         Vote storage cur_vote = votes[_vote_id];
+        //uint voterID = cur_vote.num_voters++;
         cur_vote.allowed_voters.push(_vid);
-        cur_vote.num_voters +=1;
+        uint[] memory allv;
+        cur_vote.voters[_vid] = Voter(_vid,allv);
+        //cur_vote.voters[_vid] 
+        cur_vote.num_voters+=1;
         return(cur_vote.num_voters);    
     }
 
@@ -121,8 +139,9 @@ contract Voting{
     //get methods
     function getVote(uint _vote_vid) view public returns(string memory, string memory, string memory,bytes32[] memory,uint){
         Vote storage cur_vote = votes[_vote_vid];
-        bytes32[] memory cb;
         uint nc = cur_vote.num_candidates;
+        bytes32[] memory cb = new bytes32[](nc);
+        
         for (uint i = 0; i < nc; i++) {
             cb[i]=cur_vote.candidates[i].name;
         }
@@ -132,30 +151,30 @@ contract Voting{
 
     function getVotingList() view public returns(uint[] memory){
         uint numVotes = num_votes;
-        uint[] memory cur_vid;
+        uint[] memory cur_vid = new uint[](numVotes);
         for (uint i = 0; i < numVotes; i++) {
+            //Vote storage cur_vote = votes[i];
+            //uint id = cur_vote.vote_id;
             cur_vid[i]=votes[i].vote_id;
         }
         return(cur_vid);
     }
 
-    function ifHeHasRight(address _addr, uint _vote_id) view public returns(bool){
+    function getVotingNum() view public returns(uint){
+        return(num_votes);
+    }
+
+    function ifHeHasRight(uint _vote_id, bytes32 _vid) view public returns(bool){
         Vote storage cur_vote = votes[_vote_id];
         uint n = cur_vote.num_voters;
         //bool rv = false;
         for (uint i = 0; i < n; i++) {
-            if (cur_vote.voters[i].vaddr == _addr){
+            if (cur_vote.voters[cur_vote.allowed_voters[i]].vid == _vid){
                 return true;
             }
         }
         return false;
 
     }
-
-
-    
-
-    
-
     
 }
