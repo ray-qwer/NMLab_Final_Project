@@ -32,7 +32,7 @@ function ResultList(){
             await getResult_list();
         }
         getList();
-    })
+    },[])
     const getResult_list = async() => {
         // get result list
         // getTime(deadline) == false if time out  // def in utils/utils.js
