@@ -36,6 +36,28 @@ function ResultList(){
     const getResult_list = async() => {
         // get result list
         // getTime(deadline) == false if time out  // def in utils/utils.js
+        // get voting infomation
+        // @pei-an you just put how you get _list here
+        var _votingList = await contract.methods.getVotingList(); // contract: get the voteID
+        // var _list = [];
+        // for(var i = 0;i<_votingList.length;i+=1){
+        //     var [_topic,_content,_duetime,_,_] = await contract.methods.getVoteinfo(_votingList[i]); // contract: get the info of one voteID
+        //     // new !! convert hex to string
+        //     // 
+        //     var vote = {
+        //         title: _topic,
+        //         deadLine:_duetime,
+        //         voteID:_votingList[i]
+        //     }
+        //     _list = [..._list,vote];
+        // }
+        var rList = [];
+        for (var i =0;i<_list.length;i+=1){
+            if (_list[i].deadLine < Date.now()){
+                rList = [...rList,_list[i]]
+            }
+        }
+        setVoting_list(_rList);
     }
     const goResult = (resultItem) => {
         var URL='/Result/'+resultItem.voteID;
