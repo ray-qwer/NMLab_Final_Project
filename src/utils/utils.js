@@ -1,6 +1,12 @@
 import web3 from 'web3';
 function getTime (deadLine) {
-    var DL = new Date(deadLine);
+    var DL ;
+    // console.log(deadLine)
+    // console.log(typeof(deadLine))
+    if (typeof(deadLine) =="string"){
+        DL = new Date(deadLine).getTime();
+    }
+    else DL = deadLine;
     var time = new Date();
     var diff = (DL - time);
     var countDown;

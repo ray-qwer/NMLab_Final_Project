@@ -3,16 +3,17 @@ import  "../App.css"
 import {useHistory} from 'react-router-dom' 
 import {getTime} from '../utils/utils'
 import {UserContext} from '../utils/ReducerContext'
+import Grid from "@material-ui/core/Grid"
 
 function ResultList(){
     // for Testing, can delete them, be careful that at useState also need to reclaim them 
     const myFirstVote = {
-        deadLine: "2021/6/8 21:00:00",
+        deadLine: new Date("2021/6/8 21:00:00"),
         title: "1st Vote",
         voteID: 1
     };
     const mySecVote = {
-        deadLine: "2021/6/4 11:20:00",
+        deadLine: new Date("2021/6/4 11:20:00"),
         title: "2nd Vote",
         voteID: 2
     };
@@ -34,18 +35,28 @@ function ResultList(){
         var URL='/Result/'+resultItem.voteID;
         history.push(URL);
     }
+    const getDay = (a) =>{
+        const deadLine = new Date(a);
+        const year = deadLine.getFullYear();
+        const month = deadLine.getMonth();
+        const day = deadLine.getDay();
+        const hours = deadLine.getHours();
+        const minutes = (deadLine.getMinutes()/10 < 1)?'0'+deadLine.getMinutes():deadLine.getMinutes();
+        const seconds = (deadLine.getSeconds()/10 < 1)?'0'+deadLine.getSeconds():deadLine.getSeconds();
+        return year+'/'+month+'/'+day+' '+hours+':'+minutes+':'+seconds
+    }
     const renderResult_list = Result_list.map((ResultItem,i)=>
         
-            <div className="VotingListItem" onClick={()=>goResult(ResultItem)}  key={i}>
-                <div className="VotingListItemTitle">{ResultItem.title}</div>
-                <div className="VotingListItemCountdown">Due at: {ResultItem.deadLine}</div>
-            </div>
+            <Grid container justify="space-around" className="VotingListItem" onClick={()=>goResult(ResultItem)}  key={i}>
+                <Grid item className="VotingListItemTitle"><p>{ResultItem.title}</p></Grid>
+                <Grid item className="VotingListItemCountdown">Due at: {getDay(ResultItem.deadLine)}</Grid>
+            </Grid>
         
     );
     return (
-        <div className="ResultList">
+        <Grid container direction="column" justify="space-around" alignItems="stretch" className="ResultList">
             {renderResult_list}
-        </div>
+        </Grid>
     );
 }
 

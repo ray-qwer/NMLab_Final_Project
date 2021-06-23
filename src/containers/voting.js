@@ -5,6 +5,12 @@ import Send from "@material-ui/icons/Send"
 import HomeTwoToneIcon from '@material-ui/icons/HomeTwoTone';
 import {UserContext} from '../utils/ReducerContext'
 import {hexTostring} from '../utils/utils'
+import Container from "@material-ui/core/Container"
+import Grid from "@material-ui/core/Grid"
+import Paper from "@material-ui/core/Paper"
+import InputLabel from "@material-ui/core/InputLabel"
+import Input from "@material-ui/core/Input"
+import '../App.css'
 
 function Voting() {
     const {uState,accounts,web3,contract} = useContext(UserContext);    
@@ -32,16 +38,17 @@ function Voting() {
     
     // TODO: to get information about the vote by id
     const getVoteInfo = async (voteID) =>{
-        var [_topic, _content,_duetime,_IntCandidates] = await contract.methods.getVote(voteID);
-        // new !! convert hex to string
-        var _candidates = [];
-        for (var i = 0; i<_IntCandidates.length;i+=1){
-            var _can = hexTostring(_IntCandidates[i]);
-            _candidates=[..._candidates,_can];
-        }
-        // 
-        setTopic(_topic);
-        setContent(_content);
+        // var [_topic, _content,_duetime,_IntCandidates] = await contract.methods.getVote(voteID);
+        // // new !! convert hex to string
+        // var _candidates = [];
+        // for (var i = 0; i<_IntCandidates.length;i+=1){
+        //     var _can = hexTostring(_IntCandidates[i]);
+        //     _candidates=[..._candidates,_can];
+        // }
+        // // 
+        // setTopic(_topic);
+        // setContent(_content);
+        var _candidates = ["Elmo","Cookie Monster","Bert","aaa"];
         for(var i = 0;i<_candidates.length;i=i+1){
             _candidates[i] = {
                 option: _candidates[i],
@@ -50,10 +57,9 @@ function Voting() {
         }
         setCandidate(_candidates);
         
-        // var candidates = ["Elmo","Cookie Monster","Bert"];
-        // setTopic("Choose a Monster");
-        // setCandidate(candidates);
-        // setContent("sesame street")
+        setTopic("Choose a Monster");
+        // setCandidate(candidates)。;
+        setContent("sesame street")
     }
     // TODO: submit the answer 
     const submitAnswer= async()=>{
@@ -74,9 +80,12 @@ function Voting() {
         // contract
     }
     const updateView = candidate.map((chosen,i)=>
-        <label>
-            <input type="checkbox" key={i} onChange={()=>{clickCheckBox(i)}} defaultChecked={chosen.select} /><span>{chosen.option}</span>
-        </label>
+        <Grid item xs direction="row" style={{float:"left"}}>
+            <label className="SelectOptions" >
+                <input type="checkbox" key={i} onChange={()=>{clickCheckBox(i)}} defaultChecked={chosen.select} />
+                <span style={{fontSize:30}}>{chosen.option}</span>
+            </label>
+        </Grid>
     );
 
 
@@ -92,27 +101,37 @@ function Voting() {
         history.push("/")
     }
     return(
-        <div>
+        <Container maxWidth="lg">
             {!isVote?(
                 <>
                     <Prompt when={isChose } message={'You are not voting yet. Are you sure to leave ?'}/>
-                    <h2>{topic}</h2>
-                    <span>{content}</span>
-                    <div>
-                    {updateView}
-                    </div>
+                    <Paper variant="outlined" style={{margin:20}}>
+                    <Grid container direction="column" justify="center" alignItems="center" style={{marginTop:20}} spacing={3}>
+                        <Grid item><h2>{topic}</h2></Grid>
+                        <Grid item ><p>{content}</p></Grid>
+                        <Paper variant="outlined" style={{padding:20}}>
+                            <Grid container direction="column" justify="center" alignItems="stretch" spacing={3}>
+                                    {updateView}
+                            </Grid>
+                        </Paper>
+                        <Grid item>
+                        </Grid>
+                    </Grid>
+                    </Paper>
                     <Button size="large" color='primary' variant="contained" endIcon={<Send/>} onClick={()=>{submitAnswer()}}>Submit</Button>
                 </>
             ):(
                 <>
+                    <Paper variant="outlined" style={{margin:20}}>
+
                     <h2>{topic}</h2>
                     <div>Thank you</div>
                     <div>You are voted!</div>
-                    <div><Button color='primary' variant="contained" size="large" onClick={()=>{backHome()}}><HomeTwoToneIcon/></Button></div>
-                    
+                    </Paper>
+                    <Button color='primary' variant="contained" size="large" onClick={()=>{backHome()}}><HomeTwoToneIcon/></Button>
                 </>
             )}
-        </div>
+        </Container>
     );
 }
 

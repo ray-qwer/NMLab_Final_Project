@@ -49,9 +49,21 @@
   margin-top: 20px;
 }
 
-.VotingList :hover {
+.VotingListItem:hover {
   /* border-style: ridge; */
-  border-color: darkred;
+  box-shadow: inset 0 0 0 5px #fa0;
+  border-color: #fa0;
+  height: 90px
+}
+.VotingListItem:hover p{
+  font-size: 60px;
+  transform: translateX(100%);
+  animation: VotingListItemTitle 5s linear infinite;
+  
+}
+@keyframes VotingListItemTitle {
+  0% { transform: translateX(100%);}
+  50% {transform: translateX(-100%);}
 }
 
 .VotingListItemTitle {
@@ -59,12 +71,61 @@
   font-family: Times;
   float: left;
   margin-left: 20px;
+  overflow: hidden;
 }
-
+.VotingListItemTitle p{
+  width: 500px;
+  white-space: nowrap;
+}
 .VotingListItemCountdown {
   /* margin-bottom: 10px; */
   padding-top: 40px;
   font-size: 15px;
   float: right;
   margin-right: 20px;
+}
+
+.CreateVoteListInputBlock .MuiTextField-root{
+  margin-left:20px;
+  float :left;
+  width:250px;
+}
+.CreateVoteListInputBlock p{
+  margin-right: 10px;
+  float: right;
+  width: 250px;
+  
+}
+.CreateVoteListInputBlock .WordBlock{
+  float: right;
+  width: 60%;
+}
+.CreateVoteListInputBlock .WordBlock div{
+  margin-left:10px;
+  text-align: left;
+}
+.SelectOptions {
+  /* cursor: pointer; */
+  cursor: url('./image/vote.png') 36 36,pointer;
+  width:100%
+}
+.SelectOptions input[type=checkbox]{
+  display:none;
+}
+.SelectOptions input[type=checkbox]+span{
+  display: inline-block;
+  background-color: #aaa;
+  padding: 3px 6px;
+  border: 1px solid gray;
+  color: #444; 
+}
+.SelectOptions input[type=checkbox]:checked+span{
+  color:white;
+  background-color: #444;
+}
+.SelectOptions span{
+  width:100%
+}
+.SelectOptions span:hover {
+  box-shadow: 1px 1px 1px 1px gray;
 }
