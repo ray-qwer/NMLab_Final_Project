@@ -53,7 +53,7 @@ function VoteResult() {
             }
             _candidates = [..._candidates,c];
         }
-        if(getTime){
+        if(!getTime){
             history.push('/')
             return 
         }

@@ -70,7 +70,7 @@ function Profile() {
             setHintMessage("you have change ID successfully!")
         }
         // await contract.methods.addNewVoter(hexId,accounts[0]).send({from:accounts[0],gas: 600000});
-        uDispatch({type:'LOGIN',payload:{UserId:id,isManager:true,isLogin:true}}) // isManager need to change when demo
+        uDispatch({type:'LOGIN',payload:{UserId:id,isManager:uState.isManager,isLogin:true}}) // isManager need to change when demo
         setIdSetting(false);
         
     }

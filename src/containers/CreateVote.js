@@ -13,6 +13,9 @@ import InputBase from '@material-ui/core/InputBase'
 import Grid from "@material-ui/core/Grid"
 import Container from "@material-ui/core/Container"
 import Divider from "@material-ui/core/Divider"
+import HomeTwoToneIcon from '@material-ui/icons/HomeTwoTone';
+import Home from './Home';
+
 
 function CreateVoting(){
     const {uState,accounts,web3,contract} = useContext(UserContext);
@@ -24,6 +27,7 @@ function CreateVoting(){
     const [whoCanVote,setWhoCanVote] = useState([]);
     const [candid,setCandid] = useState("");
     const [voter,setVoter] = useState("");
+    const [suc,setSuc] = useState(false);
     const history = useHistory();    
     useEffect(()=>{
         const check = async() =>{
@@ -56,7 +60,10 @@ function CreateVoting(){
         console.log(dueTime)
     }
     const addVoter = () => {
-        if (voter.indexOf(" ")>=0){
+        if (voter === ""){
+            return
+        }
+        else if (voter.indexOf(" ")>=0){
             alert("illegal ID: no space in ID");
             return;
         }
@@ -71,7 +78,7 @@ function CreateVoting(){
 
     }
     // TODO: 
-    const buildVote = () =>{
+    const buildVote = async() =>{
         if(topic === "" || content === "" || dueTime === "" ||candidates.some((e)=>e==="")){
             alert("something is empty!!!")
             return
@@ -110,11 +117,36 @@ function CreateVoting(){
         console.log(stringCanVote);
         // TODO:
         // throw "vote" to contract
-        contract.methods.addVote(vote.topic,vote.content,vote.DueTime,vote.voters,vote.candidates,vote.ballot).send({ from: accounts[0],gas: 600000, }); //[]neeed change
+        try{
+            await contract.methods.addVote(vote.topic,vote.content,vote.DueTime,vote.voters,vote.candidates,vote.ballot).send({ from: accounts[0],gas: 6000000, }); //[]neeed change
+        }catch(e){
+            alert("someting wrong..., check console for more information")
+            console.log(e)
+            return
+        }
+        setSuc(true)
+
+    }
+    const reBuild=()=>{
+        setBallot(1);
+        setCandid("");
+        setCandidates([])
+        setContent("")
+        setDueTime("");
+        setTopic("");
+        setVoter("");
+        setWhoCanVote([])
+        setSuc(false);
     }
     return (
         <Container maxWidth="lg">
-            {uState.isManager?(
+            {uState.isManager?(<>
+                {suc?(
+                <Grid container direction="column" spacing={5} justify="flex-start" alignItems="center" className="CreateVoteList" style={{marginTop:20}}>
+                    <Grid item>You have successfully created vote!!</Grid>
+                    <Button onClick={()=>{reBuild()}} variant="outlined" style={{margin:5}}>reBuild</Button>
+                    <Button onClick={()=>{history.push('/')}} variant="outlined" style={{margin:5}}>Home<HomeTwoToneIcon/></Button>              
+                </Grid>):(
                 <Grid container direction="column" spacing={5} justify="flex-start" className="CreateVoteList" style={{marginTop:20}}>
                     <Paper variant="outlined" style={{padding:20,margin:20}}>
                     <Grid container item direction="column" spacing={5} justify="center" >
@@ -149,8 +181,8 @@ function CreateVoting(){
                                 <Grid container item direction="row" spacing={4} justify="center" className="CreateVoteListInputBlock">
                                     <Grid item xs={3}><div className="WordBlock"><div>Add Candidate</div></div></Grid>
                                     <Grid item xs={6}>
-                                        <TextField value={candid} placeholder={`Candidate ${candidates.length+1}`} variant="standard"  onChange={(e)=>{setCandid(e.target.value)}} onKeyDown={(value)=>{if(value.keyCode==13){setCandidates([...candidates,candid]);setCandid("")}}}/>
-                                        <Button onClick={()=>{setCandidates([...candidates,candid]);setCandid("")}} style={{float:"left",color:"darkblue"}}><AddBoxOutlinedIcon/></Button>
+                                        <TextField value={candid} placeholder={`Candidate ${candidates.length+1}`} variant="standard"  onChange={(e)=>{setCandid(e.target.value)}} onKeyDown={(value)=>{if(value.keyCode==13){if(candid!=="")setCandidates([...candidates,candid]);setCandid("")}}}/>
+                                        <Button onClick={()=>{if(candid!=="")setCandidates([...candidates,candid]);setCandid("")}} style={{float:"left",color:"darkblue"}}><AddBoxOutlinedIcon/></Button>
                                     </Grid>
                                 </Grid>
                                 <Divider variant="middle"  style={{background:"darkgray"}}/>
@@ -175,6 +207,8 @@ function CreateVoting(){
                         <Button onClick={()=>{buildVote()}} color="primary" variant="contained">Build a Vote</Button> 
                     </Grid>
                 </Grid>
+                )}
+                </>
             ):(<Redirect to='/'/>)}
         </Container>
     );

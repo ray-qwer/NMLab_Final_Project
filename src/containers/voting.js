@@ -110,19 +110,20 @@ function Voting() {
             return
         }
         var confirmVote =  await window.confirm(`Your selection is ${ans}, are you sure?`);
+        var hid = stringToHex(String(uState.id))
         if (confirmVote){
             try{
-                contract.methods.vote(voteID,ansId,hid).send({ from: accounts[0],gas: 200000, });
+                console.log("ansId",ansId);
+                await contract.methods.vote(voteID,ansId,hid).send({ from: accounts[0],gas: 200000, });
             } catch(e){
                 alert(`something wrong..., please check your gas`)
+                console.log(e)
                 history.push('/')
                 return
             }
             setIsVote(true);
             setIsChose(false);
         }
-        console.log("ansId",ansId);
-        var hid = stringToHex(String(uState.id))
 
         // i haven't added the limit of ballots, so here can vote as much as you like
         // contract
