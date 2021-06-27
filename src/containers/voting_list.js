@@ -1,9 +1,12 @@
-import react ,{useState,Component,useEffect,useContext} from 'react'
+import React ,{useState,Component,useEffect,useContext} from 'react'
 import  "../App.css"
 import {useHistory} from 'react-router-dom' 
 import {getTime,hexTostring} from '../utils/utils'
 import {UserContext} from '../utils/ReducerContext'
+import {stringToHex} from '../utils/utils'
 import Grid from "@material-ui/core/Grid"
+import Container from "@material-ui/core/Container" 
+
 /*
     voting structure:
         deadline,
@@ -13,20 +16,20 @@ import Grid from "@material-ui/core/Grid"
 */
 function VotingList(){
     // for Testing, can delete them, be careful that at useState also need to reclaim them 
-    const myFirstVote = {
-        deadLine: new Date("2021/6/30 21:00:00").getTime(),
-        title: "1st Voteeeeeeeeeei",
+    /*const myFirstVote = {
+        deadLine: "2021/6/8 21:00:00",
+        title: "1st Vote",
         voteID: 1
     };
     const mySecVote = {
-        deadLine: new Date("2021/6/4 11:20:00").getTime(),
+        deadLine: "2021/6/4 11:20:00",
         title: "2nd Vote",
         voteID: 2
-    };
+    };*/
     // end testing
     const {uState,uDispatch,accounts,web3,contract} = useContext(UserContext);
     
-    const [Voting_list,setVoting_list] = useState([myFirstVote,mySecVote]);
+    const [Voting_list,setVoting_list] = useState([]);
     const [time,setTime] = useState(Date.now());
     const history = useHistory();
     useEffect(()=>{
@@ -43,50 +46,79 @@ function VotingList(){
     // TODO:
     const getVoting_list=async() =>{
         // get voting infomation
-        // var _votingList = await contract.methods.getVotingList(); // contract: get the voteID
-        // var _list = [];
-        // for(var i = 0;i<_votingList.length;i+=1){
-        //     var [_topic,_,_duetime,_,_] = await contract.methods.getVoteinfo(_votingList[i]); // contract: get the info of one voteID
-        //     // new !! convert hex to string
-        //     // 
-        //     var vote = {
-        //         title: _topic,
-        //         deadLine:_duetime,
-        //         voteID:_votingList[i]
-        //     }
-        //     _list = [..._list,vote];
-        // }
-        // setVoting_list(_list);
+        let _votingList = await contract.methods.getVotingList().call(); // contract: get the voteID
+        //var _votingList = [0];
+        //console.log(_votingList);
+        //var _votingList = meow;
+        var _list = [];
+        for(var i = 0;i<_votingList.length;i+=1){
+            //var _topic,_content,_duetime,_cands,_uplim = await contract.methods.getVote(1).call(); // contract: get the info of one voteID
+            var _together = await contract.methods.getVote(_votingList[i]).call();
+            var _topic = _together[0];
+            var _content = _together[1];
+            var _duetime = _together[2];
+            var _cands = _together[3];
+            var _numofvoters = _together[4];
+            //console.log(_numofvoters);
+            var _uplim = _together[5];
+           // await contract.methods.addVoter(_votingList[i],0).send({ from: accounts[0],gas: 600000, }); // contract: get the info of one voteID
+            // new !! convert hex to string
+            //_topic = hexTostring(_topic);
+            //_duetime = hexTostring(_topic);
+            // new: add Number()
+            var vote = {
+                title: _topic,
+                deadLine: Number(_duetime),
+                voteID:_votingList[i]
+                //voteID:0
+            }
+            _list = [..._list,vote];
+            //console.log(typeof(_duetime));
+            //console.log(_duetime);
+        }
+        _list.sort(function(a,b){
+            return b.deadLine-a.deadLine;
+        })
+        setVoting_list(_list);
     }
     // TODO: identity checking: if he/she has the right to vote or time out
     const goVoting = async (voteItem) => {
-        // console.log(voteID);
+        //console.log(voteItem.voteID);
+        //console.log(uState.id)
+        var hid = stringToHex(String(uState.id))
         // to the page to vote
-        // var isRight = await contract.methods.ifHeHasRight(accounts[0],voteItem.voteID) // to know if he/she has right to vote
-        // if (!isRight){
-        //     alert("you can not vote this");
-        //     return;
-        // }
+        //console.log(hid)
+        var isRight = await contract.methods.ifHeHasRight(voteItem.voteID,hid).call(); // to know if he/she has right to vote
+        //console.log(isRight);
+        if(!getTime(voteItem.deadLine)){
+            alert("timeout")
+            return
+        }
+        if (!isRight){
+            alert("you can not vote this");
+            return;
+        }
+        //My TODO: check if he voted already and timestamp
+        var hasVoted = await contract.methods.checkVoted(voteItem.voteID,hid).call();
+        if (hasVoted){
+            alert("you already voted this");
+            return;
+        }
         var URL; 
-        if(getTime(voteItem.deadLine)){
-            URL = '/Voting/'+voteItem.voteID;
-            history.push(URL);
+        
+        URL = '/Voting/'+voteItem.voteID;
+        history.push(URL);
             // check is voted?
-        }
-        else{
-            alert("timeout") 
-            // well i haven't done the checking page... sorry, ASAP
-        }
+        
+        
     }
     // 
 
     const renderVoting_list = Voting_list.map((voteItem,i)=>
-        
-            <Grid container justify="space-around" className="VotingListItem" onClick={()=>goVoting(voteItem)} key={i}>
-                <Grid item className="VotingListItemTitle"><p>{voteItem.title}</p></Grid>
-                <Grid item className="VotingListItemCountdown">{getTimeStr(voteItem.deadLine)}</Grid>
-            </Grid>
-        
+        <Grid container justify="space-around" className="VotingListItem" onClick={()=>goVoting(voteItem)} key={i}>
+            <Grid item className="VotingListItemTitle"><p>{voteItem.title}</p></Grid>
+            <Grid item className="VotingListItemCountdown">{getTimeStr(voteItem.deadLine)}</Grid>
+        </Grid>
     );
     
     function getTimeStr (deadLine) {
@@ -100,9 +132,11 @@ function VotingList(){
         return countDown;
     }
     return (
+        <Container maxWidth="lg" style={{padding:20}}>
         <Grid container direction="column" justify="space-around" alignItems="stretch" className="VotingList">
             {renderVoting_list}
         </Grid>
+        </Container>
     );
 }
 

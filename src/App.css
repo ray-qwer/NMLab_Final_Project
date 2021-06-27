@@ -107,7 +107,9 @@
 .SelectOptions {
   /* cursor: pointer; */
   cursor: url('./image/vote.png') 36 36,pointer;
-  width:100%
+  width:100%;
+  marginTop:10px;
+  margin-bottom: 10px;
 }
 .SelectOptions input[type=checkbox]{
   display:none;
@@ -120,12 +122,18 @@
   color: #444; 
 }
 .SelectOptions input[type=checkbox]:checked+span{
-  color:white;
-  background-color: #444;
+  box-shadow: inset 0 0 0 5px green;
+  border: 1px solid green;
+  
 }
 .SelectOptions span{
   width:100%
 }
 .SelectOptions span:hover {
   box-shadow: 1px 1px 1px 1px gray;
+}
+#cutText {
+  overflow:hidden;
+  display:flex;
+  text-overflow: ellipsis;
 }

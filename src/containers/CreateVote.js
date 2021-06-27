@@ -1,6 +1,6 @@
-import React,{useContext,useState,Component} from 'react'
+import React,{useContext,useState,Component, useEffect} from 'react'
 import {UserContext} from '../utils/ReducerContext'
-import {Redirect} from 'react-router-dom'
+import {Redirect,useHistory} from 'react-router-dom'
 import TextField from '@material-ui/core/TextField'
 import  "../App.css"
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -18,25 +18,37 @@ function CreateVoting(){
     const {uState,accounts,web3,contract} = useContext(UserContext);
     const [topic,setTopic] = useState("");
     const [content,setContent] = useState("");
-    const [candidates,setCandidates] = useState(["dd","ee"]);
+    const [candidates,setCandidates] = useState([]);
     const [dueTime,setDueTime] = useState("");
     const [ballot,setBallot] = useState(1);
-    const [whoCanVote,setWhoCanVote] = useState(["mm","nn"]);
+    const [whoCanVote,setWhoCanVote] = useState([]);
     const [candid,setCandid] = useState("");
     const [voter,setVoter] = useState("");
+    const history = useHistory();    
+    useEffect(()=>{
+        const check = async() =>{
+            try{var _isManager = await contract.methods.checkIfManager().call({from:accounts[0]})
+            if (!_isManager){
+                history.push('/')
+            }}catch(e){
+                history.push('/')
+            }
+        }
+        check()
+    },[])
     const candidateList = candidates.map((c,i)=>
         <Grid key={i} container item direction="row" spacing={4} justify="center" className="CreateVoteListInputBlock">
             <Grid item xs={3}><div className="WordBlock"><div>Candidate {i+1}</div></div></Grid>
             <Grid item xs={6}>
                 <TextField value={c} placeholder={`Candidate ${i}`} variant="outlined" onChange={(e)=>{setCandidates([...candidates.slice(0,i),e.target.value,...candidates.slice(i+1)])}}/>
-                <Button variant="contain" onClick={()=>{setCandidates([...candidates.slice(0,i),...candidates.slice(i+1)])}} style={{float:"left"}}><DeleteIcon/></Button>
+                <Button onClick={()=>{setCandidates([...candidates.slice(0,i),...candidates.slice(i+1)])}} style={{float:"left"}}><DeleteIcon/></Button>
             </Grid>
         </Grid>
     )
     const canVoteList = whoCanVote.map((v,i)=>
         <Grid  item key={i}>
             <span>{v}</span>
-            <Button variant="contain" onClick={()=>{setWhoCanVote([...whoCanVote.slice(0,i),...whoCanVote.slice(i+1)])}}><DeleteIcon/></Button>            
+            <Button onClick={()=>{setWhoCanVote([...whoCanVote.slice(0,i),...whoCanVote.slice(i+1)])}}><DeleteIcon/></Button>            
         </Grid>
     )
     const Click = () =>{
@@ -59,7 +71,7 @@ function CreateVoting(){
 
     }
     // TODO: 
-    const buildVote = async () =>{
+    const buildVote = () =>{
         if(topic === "" || content === "" || dueTime === "" ||candidates.some((e)=>e==="")){
             alert("something is empty!!!")
             return
@@ -74,17 +86,12 @@ function CreateVoting(){
         }
         time = new Date(time).getTime();
         console.log(time)
-        // new!! convert to int 
-        // var _topic,_content,_time;
-        // _topic = stringToHex(topic);
-        // _content = stringToHex(content);
-        // _time = stringToHex(time);
+
         var stringCandidates = [];
         for(var i = 0;i<candidates.length;i+=1){
             var _num = stringToHex(candidates[i]);
             stringCandidates = [...stringCandidates,_num];
         }
-        // 
         var stringCanVote =[];
         for(var i = 0;i<whoCanVote.length;i+=1){
             var _num = stringToHex(whoCanVote[i]);
@@ -94,14 +101,16 @@ function CreateVoting(){
             topic: topic,
             content: content,
             DueTime: time,
+            ballot: ballot,
             candidates: stringCandidates,
-            ballot: ballot
+            voters: stringCanVote
         }
+        
         console.log(vote);
         console.log(stringCanVote);
         // TODO:
         // throw "vote" to contract
-        // await contract.methods.addVote(vote.topic,vote.content,vote.DueTime,vote.candidates,1).send({from:accounts[0],gas: 1500000,gasPrice: '30000000000000'});
+        contract.methods.addVote(vote.topic,vote.content,vote.DueTime,vote.voters,vote.candidates,vote.ballot).send({ from: accounts[0],gas: 600000, }); //[]neeed change
     }
     return (
         <Container maxWidth="lg">
@@ -140,8 +149,8 @@ function CreateVoting(){
                                 <Grid container item direction="row" spacing={4} justify="center" className="CreateVoteListInputBlock">
                                     <Grid item xs={3}><div className="WordBlock"><div>Add Candidate</div></div></Grid>
                                     <Grid item xs={6}>
-                                        <TextField value={candid} placeholder={`Candidate ${candidates.length+1}`} variant="standard"  onChange={(e)=>{setCandid(e.target.value)}}/>
-                                        <Button variant="contain" onClick={()=>{setCandidates([...candidates,candid]);setCandid("")}} style={{float:"left",color:"darkblue"}}><AddBoxOutlinedIcon/></Button>
+                                        <TextField value={candid} placeholder={`Candidate ${candidates.length+1}`} variant="standard"  onChange={(e)=>{setCandid(e.target.value)}} onKeyDown={(value)=>{if(value.keyCode==13){setCandidates([...candidates,candid]);setCandid("")}}}/>
+                                        <Button onClick={()=>{setCandidates([...candidates,candid]);setCandid("")}} style={{float:"left",color:"darkblue"}}><AddBoxOutlinedIcon/></Button>
                                     </Grid>
                                 </Grid>
                                 <Divider variant="middle"  style={{background:"darkgray"}}/>

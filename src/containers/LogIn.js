@@ -9,7 +9,7 @@ import {UserContext} from '../utils/ReducerContext'
 function LogIn() {
     const {uDispatch,accounts,web3,contract} = useContext(UserContext);
     const getLoginInfo = () =>{
-        uDispatch({type:'LOGIN',payload:{UserId:"ray",isManager:true,isLogin:true}})
+        uDispatch({type:'LOGIN',payload:{UserId:0,isManager:true,isLogin:true}})
     }
     let history = useHistory()
     const LoginClick = async () =>{
