@@ -279,5 +279,4 @@ contract Voting{
     }
 
 
-    
 }
