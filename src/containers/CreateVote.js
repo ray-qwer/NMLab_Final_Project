@@ -15,6 +15,7 @@ import Container from "@material-ui/core/Container"
 import Divider from "@material-ui/core/Divider"
 import HomeTwoToneIcon from '@material-ui/icons/HomeTwoTone';
 import Home from './Home';
+import {getTime} from "../utils/utils"
 
 
 function CreateVoting(){
@@ -79,12 +80,9 @@ function CreateVoting(){
     }
     // TODO: 
     const buildVote = async() =>{
-        if(topic === "" || content === "" || dueTime === "" ||candidates.some((e)=>e==="")){
-            alert("something is empty!!!")
-            return
-        }
+        var time;
         try{
-            var time = dueTime.replace(/-/g,'/')
+            time = dueTime.replace(/-/g,'/')
             time = time.replace(/T/,' ');
             time = time+':00'
         }catch(e){
@@ -93,7 +91,18 @@ function CreateVoting(){
         }
         time = new Date(time).getTime();
         console.log(time)
-
+        if(topic === "" || content === "" || dueTime === "" ||candidates.some((e)=>e==="")){
+            alert("something is empty!!!")
+            return
+        }
+        else if(!getTime(time)){
+            alert("you can not create a vote in past!!")
+            return
+        }
+        else if(ballot>candidates.length){
+            alert("ballots cannot be more than candidates!!")
+            return 
+        }
         var stringCandidates = [];
         for(var i = 0;i<candidates.length;i+=1){
             var _num = stringToHex(candidates[i]);

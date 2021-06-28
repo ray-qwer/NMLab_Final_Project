@@ -35,7 +35,8 @@ function Profile() {
             // check if anyone use the same ID
             // pass in id, get boolean, true if have the same ID, otherwise false
             var hexId = stringToHex(id);
-            var isRepeat = await contract.methods.checkId(hexId).call();
+            console.log(accounts[0])
+            var isRepeat = await contract.methods.checkId(hexId).call({from:accounts[0]});
             if (isRepeat){
                 setV(false)
                 setErrorMessage("This id has been registried");
@@ -52,7 +53,7 @@ function Profile() {
         // if false then break
         if (!v) return
         var hexId = stringToHex(id);
-        var isRepeat = await contract.methods.checkId(hexId).call();
+        var isRepeat = await contract.methods.checkId(hexId).call({from:accounts[0]});
         if (isRepeat){
             setV(false);
             setErrorMessage("This id has been registried");
@@ -60,7 +61,7 @@ function Profile() {
         }
         console.log(accounts[0]);
         console.log(hexId);
-        var old_Id = await contract.methods.checkIfChangeId(accounts[0]).call();
+        var old_Id = await contract.methods.checkIfChangeId(accounts[0]).call({from:accounts[0]});
         console.log(old_Id);
         if (old_Id == "0x0000000000000000000000000000000000000000000000000000000000000000"){
             await contract.methods.addNewVoter(hexId,accounts[0]).send({from:accounts[0],gas: 600000});

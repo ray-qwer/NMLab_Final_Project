@@ -268,7 +268,7 @@ contract Voting{
         uint len = num_all_voters;
         for (uint i = 0; i < len; i++) {
             if (all_voters[i] == old_vid){
-                delete all_voters[i];
+                all_voters[i] = _vid;
             }
         }       
         all_voters_map[_vaddr] = _vid;   
