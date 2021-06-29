@@ -5,8 +5,13 @@ import {getTime,hexTostring} from '../utils/utils'
 import {UserContext} from '../utils/ReducerContext'
 import {stringToHex} from '../utils/utils'
 import Grid from "@material-ui/core/Grid"
-import Container from "@material-ui/core/Container" 
-
+import Container from "@material-ui/core/Container"
+import Paper from "@material-ui/core/Paper" 
+import TextField from "@material-ui/core/TextField"
+import Button from "@material-ui/core/Button"
+import Divider from "@material-ui/core/Divider"
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 /*
     voting structure:
         deadline,
@@ -14,12 +19,15 @@ import Container from "@material-ui/core/Container"
         content,
         goVoting
 */
+
 function VotingList(){
-    
+      
     const {uState,uDispatch,accounts,web3,contract} = useContext(UserContext);
-    
+    const [search,setSearch] = useState("");
+    const [view,setView] = useState([]);
     const [Voting_list,setVoting_list] = useState([]);
     const [time,setTime] = useState(Date.now());
+    const [btnClk,setBtnClk] = useState(false)
     const history = useHistory();
     useEffect(()=>{
         const timer = setTimeout(() => {
@@ -53,7 +61,9 @@ function VotingList(){
                 voteID:_votingList[i]
                 //voteID:0
             }
-            _list = [..._list,vote];
+            if(getTime(vote.deadLine)){
+                _list = [..._list,vote];
+            }
             //console.log(typeof(_duetime));
             //console.log(_duetime);
         }
@@ -61,6 +71,7 @@ function VotingList(){
             return b.deadLine-a.deadLine;
         })
         setVoting_list(_list);
+        setView(_list);
     }
     // TODO: identity checking: if he/she has the right to vote or time out
     const goVoting = async (voteItem) => {
@@ -93,8 +104,32 @@ function VotingList(){
         
     }
     // 
-
-    const renderVoting_list = Voting_list.map((voteItem,i)=>
+    const timeOrderList = () =>{
+        var _list = view;
+        if (!btnClk){
+            _list.sort(function(a,b){
+                return a.deadLine-b.deadLine;
+    
+            })
+        }
+        else {
+            _list.sort(function(a,b){
+                return b.deadLine-a.deadLine;
+    
+            })
+        }
+        setBtnClk(!btnClk);
+        setView(_list);
+    }
+    const searchList=()=>{
+        var _list = [];
+        for(var i =0;i<Voting_list.length;i+=1){
+            if(Voting_list[i].title.search(search)>=0)
+                _list = [..._list,Voting_list[i]]
+        }
+        setView(_list);
+    }
+    const renderVoting_list = view.map((voteItem,i)=>
         <Grid container justify="space-around" className="VotingListItem" onClick={()=>goVoting(voteItem)} key={i}>
             <Grid item className="VotingListItemTitle"><p>{voteItem.title}</p></Grid>
             <Grid item className="VotingListItemCountdown">{getTimeStr(voteItem.deadLine)}</Grid>
@@ -113,8 +148,15 @@ function VotingList(){
     }
     return (
         <Container maxWidth="lg" style={{padding:20}}>
-        <Grid container direction="column" justify="space-around" alignItems="stretch" className="VotingList">
-            {renderVoting_list}
+        <Grid container direction="column" justify="space-around" alignItems="center" className="VotingList">
+            <Paper elevation={0} style={{padding:5}} >
+                <Grid container  alignItems="center"  >
+                    <TextField  placeholder="search..." value={search} onChange={(e)=>{setSearch(e.target.value)}} onKeyDown={(value)=>{if(value.keyCode==13)searchList()}}/>
+                    <Divider orientation="vertical" flexItem />
+                    <Button style={{margin:5,backgroundColor:"transparent"}} variant="contained" onClick={()=>{timeOrderList()}}>Time{!btnClk?(<ExpandMoreIcon/>):(<ExpandLessIcon/>)}</Button>                    
+                </Grid>
+            </Paper>
+            {view.length===0?(<Grid>No results</Grid>):( renderVoting_list)}
         </Grid>
         </Container>
     );
