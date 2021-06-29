@@ -1,70 +1,83 @@
-# Getting Started with Create React App
+# NMLab Final Project Group 8- Blockchain Voting
+ 
+## things need to install
+1. yarn
+    install by npm:
+    ```
+    > npm install -g yarn
+    ```
+2. ganache
+5. truffle
+    ```
+    > npm install -g truffle
+    ```
+7. metamask
+    it's a chrome plugin
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## get start
+1. at your terminal
+    ```
+    > git clone https://github.com/ray-qwer/NMLab_Final_Project.git
+    > cd NMLab_Final_Project
+    ```
+2. start ganache on your PC
 
-## Available Scripts
+3. at your terminal
+    ```
+    > truffle compile
+    > truffle migrate
+    ```
+4. replace ./src/build by ./build
+5. at your terminal
+    ```
+    > yarn
+    > yarn start
+    ```
+the main page would be like below, with id is customer by default at the top right 
+![](https://i.imgur.com/lB2lnqC.jpg)
 
-In the project directory, you can run:
+## main feature
+There are two modes: manager mode and user mode
+manager mode is set at the address migrating the contract
+- **manager mode**: create vote, vote for others, see results, change ID
+- **user mode**: vote for others, see results, change ID
 
-### `yarn start`
+- create vote
+    - add the topic, content, etc. about the vote
+    - can do multi-ballot vote, upperlimit is the number of candidates
+    - add voters: give right to voters, keyin by ID
+    ![](https://i.imgur.com/VJa80T6.jpg)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- voting list
+    - list of all votes, ordered by due time
+    - show the topic and countdown about the vote
+    - choose one to click, if you have right, time isn't timeout, and never vote for this vote, page will route to another view. 
+    ![](https://i.imgur.com/JzSNWTb.jpg)
+    ![](https://i.imgur.com/FWomG2r.jpg)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
 
-### `yarn test`
+- voting
+    - choose your options, and summit. Here will need to do a recheck.
+    ![](https://i.imgur.com/ueGrXoW.jpg)
+    - if you violate the rules, eg. vote over the upperlimit, will pop up a message box to warn.
+    ![](https://i.imgur.com/c57bBpf.jpg)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- result list:
+    - shows all votes that is end up
+    - all people can access each one
+    ![](https://i.imgur.com/0vxfguw.jpg)
 
-### `yarn build`
+- result page
+    - a table about the result
+    - can order by votes he/her get, number.
+    ![](https://i.imgur.com/1fd8BxA.jpg)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- change ID
+    - if you are customer and want to vote, please set ID with no space first
+    ![](https://i.imgur.com/DAW9njk.png)
+    - can check if someone used this ID by click "verify"
+    ![](https://i.imgur.com/yt0x6PD.png)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## conclusion
+我們以Dapp連結區塊鏈打造了簡單版的投票系統，大部分功能皆已齊全，而資訊加密的部分因時間及難度問題目前沒有呈現在上面，希望之後可以進行整合，完成更完整的區塊鏈投票。
+當中雖然還有許多問題，像是ID該由選舉主辦方去做分發、如何增加/砍掉manager等等安全性的問題，需要更多的討論來實踐。
