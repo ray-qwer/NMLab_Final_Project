@@ -25,7 +25,7 @@ encrypt.sol
 
 This contract record some function to help the security system of e-voting work.
 
-/////////////
+
 main function
 
 addCandidate            (name)                    :  contract add a candidate to a vote
@@ -37,7 +37,7 @@ sendEncryptKey          (vid, pubkey)             :  secret server send public k
 saveEncryptedBallot     (vid, encrypted_ballot)   :  contract save the voter's encrypted ballots, waiting for secret server to tally
 setBallot               (cid, ballots)            :  secret server count the ballots and send the reult to contract
 
-///////////////
+
 getter function
 
 ballot                  (cid)                     :  return # ballot the candidate get
