@@ -1,5 +1,5 @@
 client.js
----------
+-------------------------------------------------------------------------------------------------
 
 At the begining, you should call "regist" to create a new voter account.
 Remember to record your id and private key(password) and save them carefully!
@@ -12,7 +12,7 @@ After deadline, you may call "ballots" to check the result of the vote.
 
 
 secret_server.js
-----------------
+-------------------------------------------------------------------------------------------------
 
 While voting, user should repeatly call "createEnKeys", which will listen to the voter's request and create a diposable key pair for encrypting ballots. The decrypting key(private key) corresponding to the voter's id will be stored in "VoterKeys".
 
@@ -21,10 +21,11 @@ After deadline, user should call "tally" to count the number of ballot of each c
 
 
 encrypt.sol
------------
+-------------------------------------------------------------------------------------------------
 
 This contract record some function to help the security system of e-voting work.
 
+/////////////
 main function
 
 addCandidate            (name)                    : contract add a candidate to a vote
@@ -36,7 +37,7 @@ sendEncryptKey          (vid, pubkey)             : secret server send public ke
 saveEncryptedBallot     (vid, encrypted_ballot)   : contract save the voter's encrypted ballots, waiting for secret server to tally
 setBallot               (cid, ballots)            : secret server count the ballots and send the reult to contract
 
-
+///////////////
 getter function
 
 ballot                  (cid)                     : return # ballot the candidate get
