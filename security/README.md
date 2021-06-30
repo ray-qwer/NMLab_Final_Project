@@ -14,7 +14,7 @@ After deadline, you may call "ballots" to check the result of the vote.
 secret_server.js
 -------------------------------------------------------------------------------------------------
 
-While voting, user should repeatly call "createEnKeys", which will listen to voter's request and create a diposable key pair for encrypting ballots. 
+While voting, user should repeatly call "createEnKeys", which will listen to voter's request and create a diposable key pair for encrypting ballots.
 The decrypting key(private key) corresponding to voter's id will be stored in "VoterKeys".
 
 After deadline, user should call "tally" to count the number of ballot of each candidate.
