@@ -21,12 +21,16 @@ function Profile() {
     // TODO:
     useEffect(()=>{
         const fetchId = async() =>{
-            const hexId = await contract.methods.getId(accounts[0]).call();    // get ID by address
-            const _id = hexTostring(hexId);
-            if (_id !== ""){
-                uDispatch({type:'LOGIN',payload:{UserId:_id,isManager:uState.isManager,isLogin:true}})   
-                setID(_id);
-            }
+            try{
+                const hexId = await contract.methods.getId(accounts[0]).call();    // get ID by address
+                const _id = hexTostring(hexId);
+                if (_id !== ""){
+                    uDispatch({type:'LOGIN',payload:{UserId:_id,isManager:uState.isManager,isLogin:true}})   
+                    setID(_id);
+                }
+            } catch(e) {
+                history.push('/')
+            } 
         }
         fetchId();
     },[])

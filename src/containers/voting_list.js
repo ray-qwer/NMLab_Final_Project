@@ -36,7 +36,11 @@ function VotingList(){
     },[time])
     useEffect(()=>{
         const getList = async() =>{
-            await getVoting_list();
+            try{
+                await getVoting_list();
+            } catch(e){
+                history.push('/')
+            }
         }
         getList();
     },[])

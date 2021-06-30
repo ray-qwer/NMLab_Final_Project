@@ -23,15 +23,20 @@ function VoteResult() {
     const history = useHistory();
     useEffect(()=>{
         const fetchDate = async()=>{
-            if(voteID === ""){
-                var ID = id;
-                setVoteID(ID);
-                // console.log(ID);
-                await getResultInfo(ID);
+            try{
+                if(voteID === ""){
+                    var ID = id;
+                    setVoteID(ID);
+                    // console.log(ID);
+                    await getResultInfo(ID);
+                }
+            } catch(e) {
+                history.push("/")
             }
         }
         fetchDate();
     },[id])
+
     // TODO: to get information about the vote by id
     const getResultInfo = async (voteID) =>{
         // contract here

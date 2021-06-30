@@ -30,39 +30,22 @@ function Voting() {
     // const [id,setId] = useState("");
     useEffect(()=>{
         const fetchDate=async()=>{
-            if(voteID === ""){
-                var ID = id;
-                setVoteID(ID);
-                //console.log(ID);
-                await getVoteInfo(ID);
+            try{
+                if(voteID === ""){
+                    var ID = id;
+                    setVoteID(ID);
+                    //console.log(ID);
+                    await getVoteInfo(ID);
+                }
+            } catch(e){
+                history.push('/')
             }
         }
         fetchDate();
     },[id])
-    
+
     // TODO: to get information about the vote by id
-    /*const getVoteInfo = async (voteID) =>{
-        var candidates = ["Elmo","Cookie Monster","Bert"];
-        for(var i = 0;i<candidates.length;i=i+1){
-            candidates[i] = {
-                option: candidates[i],
-                select: false
-            }
-        }
-        setTopic("Choose a Monster");
-        setCandidate(candidates);
-        setContent("sesame street")
-    }*/
     const getVoteInfo = async (voteID) =>{
-        /*var [_topic,_content,_duetime,_candidates,_upperlimit] = await contract.methods.getVote(voteID).send({ from: accounts[0],gas: 200000, });
-        // new !! convert hex to string
-        _topic = hexTostring(_topic);
-        _content = hexTostring(_content);
-        _candidates = [];
-        for (var i = 0; i<_IntCandidates.length;i+=1){
-            var _can = hexTostring(_IntCandidates[i]);
-            _candidates=[..._candidates,_can];
-        }*/
         var _together = await contract.methods.getVote(voteID).call();
         var _topic = _together[0];
         var _content = _together[1];

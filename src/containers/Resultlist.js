@@ -38,7 +38,11 @@ function ResultList(){
     },[time])
     useEffect (()=>{
         const getList = async() =>{
-            await getResult_list();
+            try{
+                await getResult_list();
+            } catch(e){
+                history.push('/')
+            }
         }
         getList();
     },[])
