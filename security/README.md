@@ -34,7 +34,7 @@ registVoter             (pubkey)                  :  contract create a new voter
 addVoterToWhitelist     (vid)                     :  contract add the voter to whitelist, which allow him to vote
 
 verifyVoterSignature    (vid, sign)               :  contract verify if voter's sign is valid
-sendEncryptKey          (vid, pubkey)             :  secret server send public key(for encrypting ballot) to voter
+sendEncryptKey          (vid, pubkey)             :  secret server send public key(for encrypting ballot) to the voter
 saveEncryptedBallot     (vid, encrypted_ballot)   :  contract save the voter's encrypted ballots, waiting for secret server to tally
 setBallot               (cid, ballots)            :  secret server count the ballots and send the reult to contract
 
