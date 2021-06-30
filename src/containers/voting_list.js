@@ -90,7 +90,7 @@ function VotingList(){
             return;
         }
         //My TODO: check if he voted already and timestamp
-        var hasVoted = await contract.methods.checkVoted(voteItem.voteID,hid).call();
+        var hasVoted = await contract.methods.checkVoted(voteItem.voteID,accounts[0]).call();
         if (hasVoted){
             alert("you already voted this");
             return;

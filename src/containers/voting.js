@@ -114,7 +114,7 @@ function Voting() {
         if (confirmVote){
             try{
                 console.log("ansId",ansId);
-                await contract.methods.vote(voteID,ansId,hid).send({ from: accounts[0],gas: 200000, });
+                await contract.methods.vote(voteID,ansId,hid,accounts[0]).send({ from: accounts[0],gas: 200000, });
             } catch(e){
                 alert(`something wrong..., please check your gas`)
                 console.log(e)

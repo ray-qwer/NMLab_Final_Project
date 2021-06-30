@@ -138,7 +138,7 @@ function ResultList(){
                     <Button style={{margin:5,backgroundColor:"transparent"}} variant="contained" onClick={()=>{timeOrderList()}}>Time{!btnClk?(<ExpandMoreIcon/>):(<ExpandLessIcon/>)}</Button>                    
                 </Grid>
             </Paper>
-            {view.length===0?(<>No results</>):(renderResult_list)}
+            {view.length===0?(<Grid>No results</Grid>):(renderResult_list)}
         </Grid>
         </Container>
     );

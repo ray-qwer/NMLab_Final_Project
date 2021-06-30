@@ -41,6 +41,7 @@ contract Voting{
         uint upperLimit;
         bytes32[] allowed_voters;
         bytes32[] participating_candidates;
+        address[] voted_addr;
         mapping (uint => Candidate) candidates;
         mapping (bytes32 => uint) cname_to_id;
         mapping (bytes32 => Voter) voters;
@@ -99,12 +100,13 @@ contract Voting{
         //uint[] memory vot;
         bytes32[] memory vot = ini_vot;    
         bytes32[] memory cand = ini_cand;
+        address[] memory va;
         /*uint l = ini_cand.length;
         for (uint i = 0; i < l; i++) {
             cand[i] = ini_cand[i];
         }*/
         
-        votes[voteID] = Vote(voteID,topic,content,dueTime,0,0,upperLimit,vot,cand);
+        votes[voteID] = Vote(voteID,topic,content,dueTime,0,0,upperLimit,vot,cand,va);
         uint len = cand.length;
         for (uint i = 0; i < len; i++) {
             //string memory _cname = bytes32ToString(cand[i]);
@@ -140,14 +142,16 @@ contract Voting{
     }
 
     //vote function
-    function vote(uint _vote_id,uint[] memory _chosen, bytes32 _vid) public{
+    function vote(uint _vote_id,uint[] memory _chosen, bytes32 _vid, address _vaddr) public{
         Vote storage cur_vote = votes[_vote_id];
         Voter storage cur_voter = cur_vote.voters[_vid];
+        address[] storage va = cur_vote.voted_addr;
         uint len = _chosen.length;
         for (uint i = 0; i < len; i++) {
             cur_vote.ballot[_chosen[i]]+=1;
         }
         cur_voter.allowed_votes.push(_vote_id);
+        va.push(_vaddr);
         
     }
 
@@ -217,15 +221,14 @@ contract Voting{
 
     }
 
-    function checkVoted(uint _vote_id,bytes32 _vid) view public returns(bool){
+    function checkVoted(uint _vote_id,address _vaddr) view public returns(bool){
         Vote storage cur_vote = votes[_vote_id];
-        Voter storage cur_voter = cur_vote.voters[_vid];
-        uint len = cur_voter.allowed_votes.length;
-        for (uint i = 0; i < len; i++) {
-            if (cur_voter.allowed_votes[i] == _vote_id){
+        uint len2 = cur_vote.voted_addr.length;
+        for (uint i = 0; i < len2; i++) {
+            if (cur_vote.voted_addr[i] == _vaddr){
                 return true;
             }
-        }
+        }        
         return false;
 
     }
@@ -268,10 +271,12 @@ contract Voting{
         uint len = num_all_voters;
         for (uint i = 0; i < len; i++) {
             if (all_voters[i] == old_vid){
-                all_voters[i] = _vid;
+                delete all_voters[i];
+                all_voters.push(_vid); 
             }
         }       
-        all_voters_map[_vaddr] = _vid;   
+        all_voters_map[_vaddr] = _vid;
+  
     }
 
     function checkIfChangeId(address _vaddr) view public returns(bytes32){
@@ -279,4 +284,5 @@ contract Voting{
     }
 
 
+    
 }
