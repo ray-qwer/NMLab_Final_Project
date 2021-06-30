@@ -24,9 +24,9 @@ encrypt.sol
 -----------
 
 This contract record some function to help the security system of e-voting work.
-
+/****/
 main function
--------------
+
 addCandidate            (name)                    : contract add a candidate to a vote
 registVoter             (pubkey)                  : contract create a new voter with given public key
 addVoterToWhitelist     (vid)                     : contract add the voter to whitelist, which allow him to vote
@@ -36,9 +36,9 @@ sendEncryptKey          (vid, pubkey)             : secret server send public ke
 saveEncryptedBallot     (vid, encrypted_ballot)   : contract save the voter's encrypted ballots, waiting for secret server to tally
 setBallot               (cid, ballots)            : secret server count the ballots and send the reult to contract
 
-
+/**/
 getter function
----------------
+
 ballot                  (cid)                     : return # ballot the candidate get
 numc                    ()                        : return # candidate
 numv                    ()                        : return # registed voter
